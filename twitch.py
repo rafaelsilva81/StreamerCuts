@@ -1,5 +1,14 @@
-import os
 import requests
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Twitch credentials from the .env file
+CLIENT_ID = os.getenv("TWITCH_CLIENT_ID")
+CLIENT_SECRET = os.getenv("TWITCH_CLIENT_SECRET")
+
 
 def get_access_token(client_id, client_secret):
     """
@@ -49,7 +58,7 @@ def get_user_id(access_token, user_login):
             return users[0].get("id")
     print("Failed to obtain user ID.")
     return None
-    
+
 def get_streamer_highlights(access_token, user_login):
     """
     Fetch and print highlights of a specific streamer, ordered by date.
@@ -66,7 +75,8 @@ def get_streamer_highlights(access_token, user_login):
     params = {
         "user_id": user_id,
         "type": "highlight",
-        "sort": "time"  # This ensures the results are ordered by date
+        "sort": "trending",  # This ensures the results are ordered by date
+        "period": "week"
     }
     response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
